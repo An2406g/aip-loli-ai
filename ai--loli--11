@@ -1,0 +1,155 @@
+from typing import Text
+import random
+import pyttsx3
+import datetime
+import speech_recognition
+import webbrowser as wb
+import wikipedia
+from wikipedia.wikipedia import search
+import string    
+
+#giong bosss
+loli=pyttsx3.init()
+voices = loli.getProperty('voices') 
+loli.setProperty('voice', voices[1].id)
+you=input()
+#random đồ ăn tối
+def have_dinner():
+    text_an_1 = "cơm xường"
+    text_an_2 = "cơm gà"
+    text_an_3 = "bún riêu"
+    text_a_4 = "hử tiếu"
+    text_an_5 = "phở"
+    text_an_6 = "chuối chiên"
+    text_an_7 = "bánh mì"
+    text_an_8 = "bánh bao"
+    text_an_9 = "dell ăn gì hết"
+    string = [text_an_1, text_an_2, text_an_3, text_a_4, text_an_5, text_an_6, text_an_7, text_an_8, text_an_9]
+    speak(random.choice(string))
+
+def Random_wecom():
+    text_wecom_1 = "Chào boss tôi có thể giúp được gì có người không ?"
+    text_wecom_2 = "Tôi đây có chuyện gì à ?"
+    text_wecom_3 = "Hữm cần tôi giúp gì hay sao đấy "
+    text_wecom_4 = "Niềm vinh hạnh của tôi là được giúp boss làm gì đó <3"
+    text_wecom_5 = "Ho"
+    text_wecom_6 = "hello5"
+    text_wecom_7 = "hello6"
+
+    string = [text_wecom_1, text_wecom_2, text_wecom_3, text_wecom_4, text_wecom_5, text_wecom_6, text_wecom_7]
+    speak(random.choice(string))
+
+def speak(audio):
+    print("Loli: " + audio)
+    loli.say(audio)
+    loli.runAndWait()
+    
+def open_goole():
+    speak("Boss bạn cần tìm gì ?")
+    search = input()
+    url = ('https://google.com/search?q='+ search)
+    speak("Đang tìm "+ search)
+    wb.open_new_tab(url)
+    speak("đã tim thấy ")
+    
+def open_youtobe():
+    speak("Boss cần tìm gì trên youtobe ?")
+    search = input()
+    url = ('https://www.youtube.com/results?search_query='+ search)
+    speak("Đang tìm "+ search)
+    wb.open_new_tab(url)
+    speak("Đã mở trang youtobe")
+
+def open_wiki():
+    speak("Cần tìm gì trên wiki boss ?")
+    wiki_seark = input()
+    print("Boss: " + wiki_seark)
+    wikipedia.set_lang("vi")
+    speak(wikipedia.summary(wiki_seark))    
+
+def time():
+    Time=datetime.datetime.now().strftime(" %H:%M")
+    speak("hiện tại là " + Time)
+def day():
+    Day=datetime.datetime.now().strftime("%x")
+    speak("Hôm nay là ngày "+Day)
+#comamd chào
+def wecom():
+    time_now=datetime.datetime.now().strftime("%p")
+    hour=datetime.datetime.now().hour
+    if time_now == "AM":
+        if hour >= 0 and hour<7:
+            speak("Chào buổi sáng boss. Sao boss thức sớm vậy ?")
+        elif hour >= 6 and hour<10:
+            speak("Chào buổi sáng boss. Chúc boss 1 ngày tốt lành.")
+        elif hour >= 10 and hour<12:
+            speak("Chào buổi trưa boss anh đã nghĩ ra mình ăn gì chưa ?")
+        Random_wecom()
+    elif time_now == "PM":
+        if hour > 1 and hour<5:
+            speak("Chúc anh 1 buổi chiều tốt lành nhé")
+        elif hour > 5 and hour>8:
+            speak("Chiều tối rồi anh nên đi tắm ăn cơm đi ...")
+        elif hour < 9 and hour<11:
+            speak("Nên nghĩ nghơi thôi code nhiều ra gây lú đó")
+        elif hour < 11:
+            speak("Tối lắm rồi nên ngủ sớm thôi thức khuya z không tốt đâu")
+        Random_wecom()  
+
+def good_night():
+    speak("chúc anh ngủ ngon anh có cần em hẹn giờ cho anh để sáng mai dậy không ?")
+    yes_no = input() 
+    if 'có' in yes_no:
+        print("loli")
+            
+    elif "không cần" in yes_no:
+        print("không ")
+        
+def robot_bran():
+    while True:
+        you=input()
+        
+        print("Boss " + you)
+        
+        if "wiki" in you:
+            open_wiki()  
+            
+        elif "giờ" in you:
+            time()
+        
+        elif "ngày" in you:
+            day()
+        
+        elif "goole" in you:
+            open_goole()
+            
+        elif "youtobe" in you:
+            open_youtobe()
+        
+        elif "ăn gì" in you:
+             have_dinner()
+        
+        elif "đổi món khác" in you:
+             have_dinner()
+        
+        elif "ngủ ngon" in you:
+            good_night()
+            
+        
+        elif "" in you:
+            speak("bạn nói gì tôi không hiểu, hãy dạy tôi để tôi thông minh hơn nữa :<")
+            
+        
+        elif "tạm biệt" in you:
+            speak("tạm biệt boss")
+            
+            
+            break
+       
+
+if __name__ == '__main__':       
+        if "loli" in you:
+             wecom()
+             robot_bran()
+        elif "" in you:
+            slice
