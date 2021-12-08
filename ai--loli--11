@@ -4,76 +4,136 @@ import pyttsx3
 import datetime
 import speech_recognition
 import webbrowser as wb
+import requests, json
 import wikipedia
 from wikipedia.wikipedia import search
-import string    
+import string   
+wikipedia.set_lang('vi')
+language = 'vi'
 
 #giong bosss
 loli=pyttsx3.init()
 voices = loli.getProperty('voices') 
 loli.setProperty('voice', voices[1].id)
 you=input()
-#random đồ ăn tối
-def have_dinner():
-    text_an_1 = "cơm xường"
-    text_an_2 = "cơm gà"
-    text_an_3 = "bún riêu"
-    text_a_4 = "hử tiếu"
-    text_an_5 = "phở"
-    text_an_6 = "chuối chiên"
-    text_an_7 = "bánh mì"
-    text_an_8 = "bánh bao"
-    text_an_9 = "dell ăn gì hết"
-    string = [text_an_1, text_an_2, text_an_3, text_a_4, text_an_5, text_an_6, text_an_7, text_an_8, text_an_9]
-    speak(random.choice(string))
-
-def Random_wecom():
-    text_wecom_1 = "Chào boss tôi có thể giúp được gì có người không ?"
-    text_wecom_2 = "Tôi đây có chuyện gì à ?"
-    text_wecom_3 = "Hữm cần tôi giúp gì hay sao đấy "
-    text_wecom_4 = "Niềm vinh hạnh của tôi là được giúp boss làm gì đó <3"
-    text_wecom_5 = "Ho"
-    text_wecom_6 = "hello5"
-    text_wecom_7 = "hello6"
-
-    string = [text_wecom_1, text_wecom_2, text_wecom_3, text_wecom_4, text_wecom_5, text_wecom_6, text_wecom_7]
-    speak(random.choice(string))
 
 def speak(audio):
     print("Loli: " + audio)
     loli.say(audio)
     loli.runAndWait()
-    
-def open_goole():
-    speak("Boss bạn cần tìm gì ?")
-    search = input()
-    url = ('https://google.com/search?q='+ search)
-    speak("Đang tìm "+ search)
-    wb.open_new_tab(url)
-    speak("đã tim thấy ")
-    
-def open_youtobe():
-    speak("Boss cần tìm gì trên youtobe ?")
-    search = input()
-    url = ('https://www.youtube.com/results?search_query='+ search)
-    speak("Đang tìm "+ search)
-    wb.open_new_tab(url)
-    speak("Đã mở trang youtobe")
-
-def open_wiki():
-    speak("Cần tìm gì trên wiki boss ?")
-    wiki_seark = input()
-    print("Boss: " + wiki_seark)
-    wikipedia.set_lang("vi")
-    speak(wikipedia.summary(wiki_seark))    
 
 def time():
     Time=datetime.datetime.now().strftime(" %H:%M")
     speak("hiện tại là " + Time)
+    
 def day():
     Day=datetime.datetime.now().strftime("%x")
     speak("Hôm nay là ngày "+Day)
-#comamd chào
+    
+
+
+def  weather():
+    #use aip key weather:cc6758426ec0915c98d354045e619014 có thể thai đổi vào
+    speak("Đang xem thời thiết hôm nay vui lòng đợi 1 chút ")
+    
+    ow_url = "http://api.openweathermap.org/data/2.5/weather?"
+
+    city = "Ho Chi Minh City"
+    # nếu biến city != 0 và = False thì để đấy ko xử lí gì cả
+    if not city:
+        pass
+    api_key = "cc6758426ec0915c98d354045e619014"
+    call_url = ow_url + "appid=" + api_key + "&q=" + city + "&units=metric"
+    response = requests.get(call_url)
+    data = response.json()
+
+    if data["cod"] != "404":
+        city_res = data["main"]
+        # nhiệt độ hiện tại
+        current_temperature = city_res["temp"]
+        # áp suất hiện tại
+        current_pressure = city_res["pressure"]
+        # độ ẩm hiện tại
+        current_humidity = city_res["humidity"]
+        # thời gian mặt trời
+        suntime = data["sys"]
+        # 	lúc mặt trời mọc, mặt trời mọc
+        sunrise = datetime.datetime.fromtimestamp(suntime["sunrise"])
+        # lúc mặt trời lặn
+        sunset = datetime.datetime.fromtimestamp(suntime["sunset"])
+        # thông tin thêm
+        wthr = data["weather"]
+        # mô tả thời tiết
+        weather_description = wthr[0]["description"]
+        # Lấy thời gian hệ thống cho vào biến now
+        now = datetime.datetime.now()
+        # hiển thị thông tin với người dùng
+        content = f"""
+        Hôm nay là ngày {now.day} tháng {now.month} năm {now.year}
+        Mặt trời mọc vào {sunrise.hour} giờ {sunrise.minute} phút
+        Mặt trời lặn vào {sunset.hour} giờ {sunset.minute} phút
+        Nhiệt độ trung bình là {current_temperature} độ C
+        Áp suất không khí là {current_pressure} héc tơ Pascal
+        Độ ẩm là {current_humidity}%
+        """
+        speak(content)
+    
+    speak(f"nhiệt độ hiện tại là {current_temperature} và độ ẩm là {current_humidity}%")
+    
+def ramdon_hungry():
+    a = "cơm xường"
+    b = "cơm gà"
+    c = "bún riêu"
+    d = "hử tiếu"
+    e = "phở"
+    f = "chuối chiên"
+    g = "bánh mì"
+    h = "bánh bao"
+    j = "dell ăn gì hết"
+    k = "cháo gà"
+    o = "gà rán"
+    string = [a, b, c, d, e, f, g, h ,j ,k, o]
+    speak("tối nay nên ăn " + random.choice(string))
+    
+def open_goole(you):
+    speak("Boss bạn cần tìm gì ?")
+    search = you
+    url = ('https://google.com/search?q='+ search)
+    speak(f"Đang tìm {search} trên goole")
+    wb.open_new_tab(url)
+    speak(f"đã tim thấy {search} trên goole")
+    
+def open_youtobe(you):
+    
+    speak("Boss cần tìm gì trên youtobe ?")
+    search_on_otobe = input() 
+    url = (f"https://www.youtube.com/results?search_query= {search_on_otobe}")
+    speak(f"Đang tìm {search_on_otobe} trên youtobe")
+    wb.open_new_tab(url)
+    speak("Đã tìm thấy {search_on_otobe} trên youtobe")
+
+def open_wiki(you):
+    speak("Cần tìm gì trên wiki boss ?")
+    wiki_seark = you
+    print("Boss: " + wiki_seark)
+    wikipedia.set_lang("vi")
+    speak(wikipedia.summary(wiki_seark))    
+
+
+
+def Random_help():
+    text_wecom_1 = "Chào boss tôi có thể giúp được gì có người không ?"
+    text_wecom_2 = "Tôi đây có chuyện gì à ?"
+    text_wecom_3 = "Hữm cần tôi giúp gì hay sao đấy "
+    text_wecom_4 = "Niềm vinh hạnh của tôi là được giúp boss làm gì đó <3"
+    text_wecom_5 = "Tôi đây"
+    text_wecom_6 = "có chuyện gì thế boss"
+    text_wecom_7 = "boss cần tui giúp gì à"
+
+    string = [text_wecom_1, text_wecom_2, text_wecom_3, text_wecom_4, text_wecom_5, text_wecom_6, text_wecom_7]
+    speak(random.choice(string))
+
+
 def wecom():
     time_now=datetime.datetime.now().strftime("%p")
     hour=datetime.datetime.now().hour
@@ -84,26 +144,27 @@ def wecom():
             speak("Chào buổi sáng boss. Chúc boss 1 ngày tốt lành.")
         elif hour >= 10 and hour<12:
             speak("Chào buổi trưa boss anh đã nghĩ ra mình ăn gì chưa ?")
-        Random_wecom()
     elif time_now == "PM":
         if hour > 1 and hour<5:
             speak("Chúc anh 1 buổi chiều tốt lành nhé")
-        elif hour > 5 and hour>8:
+        elif hour > 5 and hour<7:
             speak("Chiều tối rồi anh nên đi tắm ăn cơm đi ...")
         elif hour < 9 and hour<11:
             speak("Nên nghĩ nghơi thôi code nhiều ra gây lú đó")
         elif hour < 11:
             speak("Tối lắm rồi nên ngủ sớm thôi thức khuya z không tốt đâu")
-        Random_wecom()  
 
-def good_night():
+def good_night(you):
     speak("chúc anh ngủ ngon anh có cần em hẹn giờ cho anh để sáng mai dậy không ?")
-    yes_no = input() 
+    good_night_yes_no = you
     if 'có' in yes_no:
         print("loli")
             
     elif "không cần" in yes_no:
         print("không ")
+        
+def quit():
+    exit()
         
 def robot_bran():
     while True:
@@ -124,32 +185,34 @@ def robot_bran():
             open_goole()
             
         elif "youtobe" in you:
-            open_youtobe()
+            open_youtobe(you)
         
         elif "ăn gì" in you:
-             have_dinner()
+            ramdon_hungry()
         
-        elif "đổi món khác" in you:
-             have_dinner()
+        elif "đổi món" in you:
+            ramdon_hungry()
         
         elif "ngủ ngon" in you:
             good_night()
             
+        elif "thời tiết" in you:
+            weather()
+        
+        elif "bye" in you:
+            speak("tạm biệt boss")
+            exit()   
         
         elif "" in you:
             speak("bạn nói gì tôi không hiểu, hãy dạy tôi để tôi thông minh hơn nữa :<")
             
         
-        elif "tạm biệt" in you:
-            speak("tạm biệt boss")
-            
-            
-            break
        
 
 if __name__ == '__main__':       
         if "loli" in you:
              wecom()
              robot_bran()
-        elif "" in you:
-            slice
+        elif "giúp" in you:
+            Random_help()
+            robot_bran()
