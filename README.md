@@ -1,1 +1,1 @@
-# aip-loli-ai
+LOLI AI: là trí thông minh nhân tạo hiện đang được phát triển bới dev Bùi Quốc An (Ki). AI được tạo cho cho những đứa bị nghiện loli , cách sữ dụng rất đơn giản có thể chăm sóc bạn hơn cả người yêu lo cho bạn từ giấc ngủ tới miếng ăn. Được phát triển trên ngôn ngữ python giúp sử lý nhanh nhìu tác vụ và lượng lớn dữ liệu
